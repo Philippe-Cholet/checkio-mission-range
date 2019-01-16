@@ -1,0 +1,80 @@
+<!-- Describe task in general -->
+<p> <!-- Introduction -->
+    This mission is an adaptation of the "Range" game (from
+    <a href="https://www.chiark.greenend.org.uk/~sgtatham/puzzles/">
+    Simon Tatham's Portable Puzzle Collection</a>).
+    If you are lost or just want to play, the game is available
+    <a href="https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/range.html">here</a>.
+</p>
+
+<p> <!-- Quick description -->
+    You're on a rectangular grid. Each numbered box can see precisely that many
+    boxes by looking in all four directions (not diagonally), counting itself.
+    In order to satisfy these constraints, you can put black boxes
+    in empty ones to block the view.
+</p>
+
+<p>
+    Two additional rules:
+    <ul>
+        <li>Two black boxes can't be neighbors horizontally or vertically.</li>
+        <li>Black boxes can't separate white ones into several parts.</li>
+    </ul>
+</p>
+
+<p> <!-- Representation -->
+    Empty boxes are represented by zeros.
+</p>
+
+<p> <!-- What return? -->
+    Then, you have to return the cooordinates of black boxes.
+</p>
+
+<pre class="for_info_only" style="text-align:center">
+<img src="{{MEDIA}}example-input.png" alt="5x5 example input" title="5x5 input"/>               <img src="{{MEDIA}}example-output.png" alt="5x5 example output" title="5x5 output"/>
+
+Black boxes at (1, 2), (0, 0), (2, 3), (3, 4) and (2, 0).
+[[0, 0, 4, 0, 6],
+ [0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0],
+ [0, 0, 0, 5, 0],
+ [6, 0, 7, 0, 0]]
+</pre>
+
+
+<!-- Explain input and output values -->
+<p>
+    <strong>Input:</strong>
+    A list of lists of integers.
+</p>
+
+<p>
+    <strong>Output:</strong>
+    An iterable of tuples/lists of two integers.
+</p>
+
+
+<!-- Put some usage examples -->
+<div class="for_info_only">
+<p>
+    <strong>Example:</strong>
+</p>
+
+<pre class="brush: python">
+list(visibilities([[0, 0, 4, 0, 6],
+                   [0, 6, 0, 0, 0],
+                   [0, 0, 0, 0, 0],
+                   [0, 0, 0, 5, 0],
+                   [6, 0, 7, 0, 0]])) == [(1, 2), (0, 0), (2, 3), (3, 4), (2, 0)]
+</pre>
+</div>
+
+<p>
+    <strong>Preconditions:</strong>
+    <ul>
+        <li>Given puzzles are solvable.</li>
+        <li>5 &le; len(grid) &le; 50 and 5 &le; len(grid[0]) &le; 50.</li>
+        <li>all(len(row) == len(grid[0]) for row in grid).</li>
+    </ul>
+</p>
+
