@@ -8,17 +8,16 @@
 </p>
 
 <p> <!-- Quick description -->
-    You're on a rectangular grid. Each numbered box can see precisely that many
-    boxes by looking in all four directions (not diagonally), counting itself.
-    In order to satisfy these constraints, you can put black boxes
-    in empty ones to block the view.
+    You're on a rectangular grid. Each numbered box corresponds to the number of empty cells in all four directions from it (but not diagonally), including itself.
+    In order to satisfy these requirements, you have to arrange black boxes 
+in empty cells to limit visibility.
 </p>
 
 <p>
     Two additional rules:
     <ul>
         <li>Two black boxes can't be neighbors horizontally or vertically.</li>
-        <li>Black boxes can't separate white ones into several parts.</li>
+        <li>Black boxes can't separate white cells into several parts.</li>
     </ul>
 </p>
 
@@ -27,11 +26,12 @@
 </p>
 
 <p> <!-- What return? -->
-    Then, you have to return the cooordinates of black boxes.
+    Then, you have to return the coordinates of black boxes.
 </p>
 
 <pre class="for_info_only" style="text-align:center">
-<img src="{{MEDIA}}example-input.png" alt="5x5 example input" title="5x5 input"/>               <img src="{{MEDIA}}example-output.png" alt="5x5 example output" title="5x5 output"/>
+<img src="{{MEDIA}}example-input.png" alt="5x5 example input" title="5x5 input"/>               
+<img src="{{MEDIA}}example-output.png" alt="5x5 example output" title="5x5 output"/>
 
 Black boxes at (1, 2), (0, 0), (2, 3), (3, 4) and (2, 0).
 [[0, 0, 4, 0, 6],
@@ -77,4 +77,3 @@ list(visibilities([[0, 0, 4, 0, 6],
         <li>all(len(row) == len(grid[0]) for row in grid).</li>
     </ul>
 </p>
-
