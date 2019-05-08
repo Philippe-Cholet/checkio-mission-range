@@ -42,39 +42,47 @@ def checker(grid, result):
         if not (isinstance(item, (tuple, list)) and len(item) == 2 and
                 all(isinstance(n, int) for n in item)):
             return False, ("You should give tuples/lists of 2 ints, "
-                           f"not {item}.")
+                           f"not {item}.", "Invalid")
         i, j = item
         if not in_grid(i, j):
-            return False, f"{(i, j)} is outside the grid."
+            return False, (f"{(i, j)} is outside the grid.", "Invalid")
         if grid[i][j] > 0:
             return False, ("You can't put a black box on the "
-                           f"number {grid[i][j]} at {(i, j)}.")
+                           f"number {grid[i][j]} at {(i, j)}.",
+                           "Valid",((i, j),))
         if grid[i][j] == BLACK:
-            return False, f"You can't put a black box twice at {(i, j)}."
+            return False, (f"You can't put a black box twice at {(i, j)}.",
+                            "Valid", ((i, j),))
         for x, y in ((i + di, j + dj) for di, dj in MOVES):
             if in_grid(x, y) and grid[x][y] == BLACK: # RULE 1
                 return False, (f"You can't put a black box at {(x, y)} "
                                f"because there is a box at {(i, j)}, "
-                               "it's too close.")
+                               "it's too close.",
+                               "Valid", ((x, y),))
         grid[i][j] = BLACK
     bool_array = array([[n != BLACK for n in row] for row in grid])
     num_pieces = label(bool_array)[1]
     if num_pieces > 1: # RULE 2
         return False, ("White boxes in the grid should not be separated "
-                       f"into {num_pieces} pieces by black boxes.")
+                       f"into {num_pieces} pieces by black boxes.",
+                       "Valid")
     numbers = ((i, j, n) for i, row in enumerate(grid)
                          for j, n in enumerate(row) if n > 0)
     for i, j, n in numbers:
         visibility_from_n = 1
+        ends = []
         for di, dj in MOVES:
             x, y = i + di, j + dj
             while in_grid(x, y) and grid[x][y] != BLACK:
                 visibility_from_n += 1
                 x, y = x + di, y + dj
+            ends.append((x, y))
+
         if visibility_from_n != n: # RULE 3
             return False, (f"The box at {(i, j)} should see "
-                           f"{n} boxes, not {visibility_from_n}.")
-    return True, "Great!"
+                           f"{n} boxes, not {visibility_from_n}.",
+                           "Valid", ends)
+    return True, ("Great!", "Valid")
 
 
 cover_iterable = '''
