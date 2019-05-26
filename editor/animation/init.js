@@ -14,6 +14,7 @@ requirejs(['ext_editor_io', 'jquery_190', 'raphael_210'],
             const result_addon_00 = data.ext.result_addon[0]
             const result_addon_01 = data.ext.result_addon[1]
             const result_addon_02 = data.ext.result_addon[2]
+            const result_addon_03 = data.ext.result_addon[3]
 
             /*----------------------------------------------*
              *
@@ -76,8 +77,8 @@ requirejs(['ext_editor_io', 'jquery_190', 'raphael_210'],
              * error visibility
              *
              *----------------------------------------------*/
-            if (result_addon_02 && result_addon_02.length > 1) {
-                const [t, b, l, r] = result_addon_02
+            if (result_addon_02 === 3) {
+                const [t, b, l, r] = result_addon_03
                 const [top, x] = t
                 const [y, left] = l
                 const bottom = b[0]
@@ -96,6 +97,25 @@ requirejs(['ext_editor_io', 'jquery_190', 'raphael_210'],
 
             /*----------------------------------------------*
              *
+             * error separated
+             *
+             *----------------------------------------------*/
+            const boundary_blocks = {}
+            if (result_addon_02 === 2) {
+                output.forEach(([r, c])=>{
+                    const adjs = [[r-1, c], [r+1, c], [r, c-1], [r, c+1]]
+                    const area_sets = new Set(
+                        adjs.filter(
+                            ([r, c])=>r < height && r >= 0 && c < width &&
+                            c >= 0).map(([r, c])=>result_addon_03[r][c]))
+                    if (area_sets.size > 1) {
+                        boundary_blocks[r*100+c] = 1
+                    }
+                })
+            }
+
+            /*----------------------------------------------*
+             *
              * draw grid
              *
              *----------------------------------------------*/
@@ -103,23 +123,35 @@ requirejs(['ext_editor_io', 'jquery_190', 'raphael_210'],
                 paper.rect(os, SIZE*r+os, SIZE*width, SIZE).attr(
                     attr.grid.empty)
                 for (let c = 0; c < width; c += 1) {
+                    // grid
                     if (r === 0) {
                         paper.rect(
                             SIZE*c+os, os, SIZE, SIZE*height).attr(
                             attr.grid.empty)
                     }
 
-                    if (result_addon_02 && result_addon_02.length === 1
-                        && result_addon_02[0][0] === r
-                        && result_addon_02[0][1] === c) { 
+                    // error 0, 1
+                    if ((result_addon_02 === 0 || result_addon_02 === 1)
+                        && result_addon_03[0][0] === r
+                        && result_addon_03[0][1] === c) { 
 
                         paper.rect(SIZE*c+os, SIZE*r+os, SIZE, SIZE).attr(
                             attr.grid.error)
+
+                    // error 2
+                    } else if (result_addon_02 === 2 &&
+                        boundary_blocks[r*100+c]) {
+
+                        paper.rect(SIZE*c+os, SIZE*r+os, SIZE, SIZE).attr(
+                            attr.grid.error)
+
+                    // normal
                     } else if (blacks[r*100+c] === 1) {
                         paper.rect(SIZE*c+os, SIZE*r+os, SIZE, SIZE).attr(
                             attr.grid.block)
                     }
 
+                    // number
                     if (input[r][c] > 0) {
                         const num = paper.text(SIZE*c+os+SIZE*.5, 
                             SIZE*r+os+SIZE*.5, input[r][c])
