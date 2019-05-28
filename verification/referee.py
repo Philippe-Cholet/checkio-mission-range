@@ -49,23 +49,23 @@ def checker(grid, result):
         if grid[i][j] > 0:
             return False, ("You can't put a black box on the "
                            f"number {grid[i][j]} at {(i, j)}.",
-                           "Valid",((i, j),))
+                           "Valid", 0, ((i, j),))
         if grid[i][j] == BLACK:
             return False, (f"You can't put a black box twice at {(i, j)}.",
-                            "Valid", ((i, j),))
+                            "Valid", 0, ((i, j),))
         for x, y in ((i + di, j + dj) for di, dj in MOVES):
             if in_grid(x, y) and grid[x][y] == BLACK: # RULE 1
                 return False, (f"You can't put a black box at {(x, y)} "
                                f"because there is a box at {(i, j)}, "
                                "it's too close.",
-                               "Valid", ((x, y),))
+                               "Valid", 1, ((x, y),))
         grid[i][j] = BLACK
     bool_array = array([[n != BLACK for n in row] for row in grid])
-    num_pieces = label(bool_array)[1]
+    labeled_grid, num_pieces = label(bool_array)
     if num_pieces > 1: # RULE 2
         return False, ("White boxes in the grid should not be separated "
                        f"into {num_pieces} pieces by black boxes.",
-                       "Valid")
+                       "Valid", 2, labeled_grid.tolist())
     numbers = ((i, j, n) for i, row in enumerate(grid)
                          for j, n in enumerate(row) if n > 0)
     for i, j, n in numbers:
@@ -81,7 +81,7 @@ def checker(grid, result):
         if visibility_from_n != n: # RULE 3
             return False, (f"The box at {(i, j)} should see "
                            f"{n} boxes, not {visibility_from_n}.",
-                           "Valid", ends)
+                           "Valid", 3, ends)
     return True, ("Great!", "Valid")
 
 
